@@ -7,7 +7,12 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="chat-container">
+    <div id="role-selection" class="role-selection">
+        <h2>Select your role</h2>
+        <button id="select-sender">Sender</button>
+        <button id="select-receiver">Receiver</button>
+    </div>
+    <div id="chat-container" class="chat-container" style="display: none;">
         <h1>Shennagains</h1>
         <div id="messages" class="messages"></div>
         <form id="message-form">

@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const messagesContainer = document.getElementById('messages');
 
     let role = '';
-    const displayedMessages = new Set();
 
     selectSenderButton.addEventListener('click', () => {
         role = 'sender';
@@ -52,10 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 const newMessage = await response.json();
-                if (!displayedMessages.has(newMessage._id)) {
-                    displayMessage(newMessage);
-                    displayedMessages.add(newMessage._id);
-                }
+                displayMessage(newMessage);
             } else {
                 console.error('Failed to send message');
             }
@@ -69,12 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('/api/messages?user1=user1&user2=user2');
             if (response.ok) {
                 const messages = await response.json();
-                messages.forEach(message => {
-                    if (!displayedMessages.has(message._id)) {
-                        displayMessage(message);
-                        displayedMessages.add(message._id);
-                    }
-                });
+                messages.forEach(displayMessage);
             } else {
                 console.error('Failed to fetch messages');
             }
@@ -85,23 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayMessage(message) {
         const messageElement = document.createElement('div');
-        const timestamp = new Date(message.timestamp).toLocaleString();
-        messageElement.textContent = `${message.sender}: ${message.content} (${timestamp})`;
+        messageElement.textContent = `${message.sender}: ${message.content}`;
         messagesContainer.appendChild(messageElement);
-
-        // Update the document title to indicate unread messages
-        if (document.hidden) {
-            document.title = "New message!";
-        }
     }
-
-    // Reset the document title when the tab becomes visible
-    document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) {
-            document.title = "Shennagains";
-        }
-    });
-
-    // Fetch messages every 1 second
-    setInterval(fetchMessages, 1000);
 });
