@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Private Messaging Service</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="messages" id="messages">
+            <% messages.forEach(function(message) { %>
+                <div class="message">
+                    <strong><%= message.sender %>:</strong> <%= message.text %>
+                </div>
+            <% }); %>
+        </div>
+        <form id="message-form" action="/send" method="POST">
+            <input type="text" name="message" id="message" placeholder="Type your message..." required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <script src="/scripts.js"></script>
+</body>
+</html>
