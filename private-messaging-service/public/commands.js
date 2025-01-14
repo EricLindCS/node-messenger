@@ -5,18 +5,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const newUserInput = document.getElementById('new-user');
 
     clearMessagesButton.addEventListener('click', async () => {
-        try {
-            const response = await fetch('/api/messages', {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                alert('All messages cleared');
-            } else {
-                alert('Failed to clear messages');
+        const password = prompt('Enter the password to clear messages:');
+        if (password === 'DELETE') {
+            const confirmation = confirm('Are you sure you want to clear all messages?');
+            if (confirmation) {
+                try {
+                    const response = await fetch('/api/messages', {
+                        method: 'DELETE',
+                    });
+                    if (response.ok) {
+                        alert('All messages cleared');
+                    } else {
+                        alert('Failed to clear messages');
+                    }
+                } catch (error) {
+                    console.error('Error clearing messages:', error);
+                    alert('Error clearing messages');
+                }
             }
-        } catch (error) {
-            console.error('Error clearing messages:', error);
-            alert('Error clearing messages');
+        } else {
+            alert('Incorrect password');
         }
     });
 
