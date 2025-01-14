@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const path = require('path');
-const Message = require('./models/messageModel'); // Import the Message model
+const Message = require('./models/messageModel'); 
 const messageRoutes = require('./routes/messageRoutes');
 require('dotenv').config();
 

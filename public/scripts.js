@@ -111,16 +111,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update the document title to indicate unread messages
         if (document.hidden) {
-            document.title = "New message!";
+            document.title = "OnShape";
+            changeFavicon('public/icons/green-circle.png');
         }
     }
 
     // Reset the document title when the tab becomes visible
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
-            document.title = "Shennagains";
+            document.title = "Robotics";
+            changeFavicon('');
+
         }
     });
+
+    // Function to change the favicon
+    function changeFavicon(src) {
+        const favicon = document.getElementById('favicon');
+        if (src) {
+            favicon.href = src;
+        } else {
+            favicon.removeAttribute('href');
+        }
+    }
 
     // Fetch messages every 1 second
     setInterval(fetchMessages, 1000);
