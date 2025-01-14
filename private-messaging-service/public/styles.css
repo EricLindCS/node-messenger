@@ -32,7 +32,7 @@ body {
 
 .message .timestamp {
     font-size: 0.8em;
-    color: #999;
+    color: gray;
 }
 
 .input-group {
@@ -57,4 +57,9 @@ body {
 
 .input-group button:hover {
     background-color: #4cae4c;
+}
+
+.timestamp {
+    font-size: 0.8em;
+    color: gray;
 }

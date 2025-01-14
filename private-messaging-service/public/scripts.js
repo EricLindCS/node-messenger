@@ -1,23 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
     const roleSelection = document.getElementById('role-selection');
     const chatContainer = document.getElementById('chat-container');
-    const selectSenderButton = document.getElementById('select-sender');
-    const selectReceiverButton = document.getElementById('select-receiver');
+    const loginButton = document.getElementById('login-button');
+    const passwordInput = document.getElementById('password-input');
     const messageForm = document.getElementById('message-form');
     const messageInput = document.getElementById('message-input');
     const messagesContainer = document.getElementById('messages');
 
     let role = '';
+    let receiver = '';
     const displayedMessages = new Set();
+    let passwordUserMapping = {};
 
-    selectSenderButton.addEventListener('click', () => {
-        role = 'sender';
-        initializeChat();
+    // Fetch password-user mapping from the server
+    fetch('/api/passwords')
+        .then(response => response.json())
+        .then(data => {
+            passwordUserMapping = data;
+        })
+        .catch(error => {
+            console.error('Error fetching password-user mapping:', error);
+        });
+
+    loginButton.addEventListener('click', () => {
+        const password = passwordInput.value;
+        if (passwordUserMapping[password]) {
+            role = passwordUserMapping[password];
+            receiver = Object.values(passwordUserMapping).find(user => user !== role);
+            initializeChat();
+        } else {
+            alert('Invalid password');
+        }
     });
 
-    selectReceiverButton.addEventListener('click', () => {
-        role = 'receiver';
-        initializeChat();
+    // Add event listener for Enter key on password input
+    passwordInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            loginButton.click();
+        }
     });
 
     function initializeChat() {
@@ -44,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    sender: role === 'sender' ? 'user1' : 'user2', // Replace with actual sender
-                    receiver: role === 'receiver' ? 'user1' : 'user2', // Replace with actual receiver
+                    sender: role,
+                    receiver: receiver,
                     content: message
                 }),
             });
@@ -66,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function fetchMessages() {
         try {
-            const response = await fetch('/api/messages?user1=user1&user2=user2');
+            const response = await fetch(`/api/messages?user1=${role}&user2=${receiver}`);
             if (response.ok) {
                 const messages = await response.json();
                 messages.forEach(message => {
@@ -86,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayMessage(message) {
         const messageElement = document.createElement('div');
         const timestamp = new Date(message.timestamp).toLocaleString();
-        messageElement.textContent = `${message.sender}: ${message.content} (${timestamp})`;
+        messageElement.innerHTML = `${message.sender}: ${message.content} <span class="timestamp">(${timestamp})</span>`;
         messagesContainer.appendChild(messageElement);
 
         // Update the document title to indicate unread messages

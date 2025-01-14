@@ -21,13 +21,15 @@ class MessageController {
     async getMessages(req, res) {
         try {
             const { user1, user2 } = req.query;
+            console.log('user1', user1)
             const messages = await this.messageModel.find({
                 $or: [
                     { sender: user1, receiver: user2 },
                     { sender: user2, receiver: user1 }
                 ]
             });
-            res.status(200).json(messages);
+            const messages1 = await this.messageModel.find()
+            res.status(200).json(messages1);
         } catch (error) {
             res.status(500).json({ error: 'Failed to retrieve messages' });
         }
